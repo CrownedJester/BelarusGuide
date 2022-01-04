@@ -1,4 +1,4 @@
-package com.crownedjester.soft.belarusguide.ui.theme
+package com.crownedjester.soft.belarusguide.representation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

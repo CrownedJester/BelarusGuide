@@ -1,4 +1,4 @@
-package com.crownedjester.soft.belarusguide.ui.theme
+package com.crownedjester.soft.belarusguide.representation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
