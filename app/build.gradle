@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.maps.android:maps-v3-ktx:3.3.0'
 
     //Coil
-    implementation "io.coil-kt:coil:1.4.0"
+    implementation "io.coil-kt:coil-compose:1.4.0"
 
     //Fragment
     implementation "androidx.fragment:fragment-ktx:1.4.0"
