@@ -4,8 +4,9 @@ import com.crownedjester.soft.belarusguide.data.KrokappApi
 import com.crownedjester.soft.belarusguide.data.model.CityDto
 import com.crownedjester.soft.belarusguide.data.model.LanguageDto
 import com.crownedjester.soft.belarusguide.data.model.PointInfo
+import javax.inject.Inject
 
-class RemoteServicesRepositoryImpl(
+class RemoteServicesRepositoryImpl @Inject constructor(
     private val remoteApiServices: KrokappApi
 ) : RemoteServicesRepository {
 

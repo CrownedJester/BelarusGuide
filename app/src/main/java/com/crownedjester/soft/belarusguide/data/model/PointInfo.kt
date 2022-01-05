@@ -16,7 +16,9 @@ data class PointInfo(
     val photo: String,
     @SerializedName("city_id")
     val cityId: Int,
-    val images: List<String>
+    val images: List<String>,
+    @SerializedName("last_edit_time")
+    val lastEditTime: Long
 )
 
 
