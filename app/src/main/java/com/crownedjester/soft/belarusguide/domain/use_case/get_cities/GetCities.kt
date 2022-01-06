@@ -21,8 +21,8 @@ class GetCities @Inject constructor(private val repository: RemoteServicesReposi
                     result.add(city)
                 }
             }
-
-            emit(Resource.Success(result.toList()))
+            result.sortBy { city -> city.id }
+            emit(Resource.Success(result))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unexpected error occurred"))
         } catch (e: IOException) {
