@@ -2,7 +2,7 @@ package com.crownedjester.soft.belarusguide.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PointInfo(
+data class PlaceInfo(
     val id: Int,
     @SerializedName("id_point")
     val idPoint: Int,

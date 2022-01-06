@@ -2,7 +2,7 @@ package com.crownedjester.soft.belarusguide.data
 
 import com.crownedjester.soft.belarusguide.data.model.CityDto
 import com.crownedjester.soft.belarusguide.data.model.LanguageDto
-import com.crownedjester.soft.belarusguide.data.model.PointInfo
+import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
 import retrofit2.http.GET
 
 interface KrokappApi {
@@ -11,7 +11,7 @@ interface KrokappApi {
     suspend fun getCities(): List<CityDto>
 
     @GET("api/get_points/11")
-    fun getPoints(): List<PointInfo>
+    fun getPoints(): List<PlaceInfo>
 
     @GET("api/get_languages")
     fun getLanguages(): List<LanguageDto>
