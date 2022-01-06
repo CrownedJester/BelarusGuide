@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.crownedjester.soft.belarusguide.data.model.CityDto
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CityItem(
     modifier: Modifier = Modifier,
@@ -34,6 +36,7 @@ fun CityItem(
             .height(96.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
+        onClick = onClick,
         border = BorderStroke(1.dp, Color.Gray)
     ) {
         Row(
