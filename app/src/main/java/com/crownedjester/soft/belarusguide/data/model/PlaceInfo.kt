@@ -1,7 +1,10 @@
 package com.crownedjester.soft.belarusguide.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PlaceInfo(
     val id: Int,
     @SerializedName("id_point")
@@ -19,6 +22,6 @@ data class PlaceInfo(
     val images: List<String>,
     @SerializedName("last_edit_time")
     val lastEditTime: Long
-)
+) : Parcelable
 
 

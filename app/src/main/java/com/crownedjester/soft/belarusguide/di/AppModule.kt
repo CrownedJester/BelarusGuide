@@ -1,12 +1,16 @@
 package com.crownedjester.soft.belarusguide.di
 
+import android.content.Context
 import com.crownedjester.soft.belarusguide.common.Constants
 import com.crownedjester.soft.belarusguide.data.KrokappApi
+import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreManager
+import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreRepository
 import com.crownedjester.soft.belarusguide.domain.repository.RemoteServicesRepository
 import com.crownedjester.soft.belarusguide.domain.repository.RemoteServicesRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,9 +41,15 @@ object AppModule {
     @Singleton
     fun providesRemoteRepository(remoteApi: KrokappApi): RemoteServicesRepository =
         RemoteServicesRepositoryImpl(remoteApi)
+
+    @Provides
+    @Singleton
+    fun providesDataStore(@ApplicationContext context: Context): DataStoreRepository =
+        DataStoreManager(context)
+
 }
 
-fun createClient(): OkHttpClient {
+private fun createClient(): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
 

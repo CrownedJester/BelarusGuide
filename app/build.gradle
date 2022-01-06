@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -98,4 +99,7 @@ dependencies {
 
     //Logging interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
+
+    //Data store preferences
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
