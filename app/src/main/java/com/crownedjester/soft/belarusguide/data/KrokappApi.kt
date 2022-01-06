@@ -11,8 +11,8 @@ interface KrokappApi {
     suspend fun getCities(): List<CityDto>
 
     @GET("api/get_points/11")
-    fun getPoints(): List<PlaceInfo>
+    suspend fun getPoints(): List<PlaceInfo>
 
     @GET("api/get_languages")
-    fun getLanguages(): List<LanguageDto>
+    suspend fun getLanguages(): List<LanguageDto>
 }
