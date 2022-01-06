@@ -5,15 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crownedjester.soft.belarusguide.common.Resource
+import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreRepository
 import com.crownedjester.soft.belarusguide.domain.use_case.get_languages.GetLanguage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LanguagesViewModel @Inject constructor(
-    private val getLanguagesUseCase: GetLanguage
+    private val getLanguagesUseCase: GetLanguage,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
     private val _languagesState = mutableStateOf(LanguagesState())
@@ -37,5 +40,9 @@ class LanguagesViewModel @Inject constructor(
 
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun setDataLanguage(langId: Int) = viewModelScope.launch {
+        dataStoreRepository.setContentLanguage(langId)
     }
 }

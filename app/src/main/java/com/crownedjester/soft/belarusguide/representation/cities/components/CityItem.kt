@@ -27,7 +27,6 @@ fun CityItem(
     modifier: Modifier = Modifier,
     city: CityDto,
     onClick: () -> Unit,
-    navController: NavController? = null
 ) {
 
     Card(

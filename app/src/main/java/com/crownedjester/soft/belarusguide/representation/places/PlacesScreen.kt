@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.crownedjester.soft.belarusguide.representation.places.components.PlaceItem
+import com.crownedjester.soft.belarusguide.representation.util.Screen
 
 @Composable
-fun PlacesScreen(modifier: Modifier = Modifier, viewModel: PlacesViewModel = hiltViewModel()) {
+fun PlacesScreen(viewModel: PlacesViewModel = hiltViewModel(), navController: NavController) {
 
     val placesState = viewModel.placesState.value
 
@@ -35,7 +37,15 @@ fun PlacesScreen(modifier: Modifier = Modifier, viewModel: PlacesViewModel = hil
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(320.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navController.apply {
+                                currentBackStackEntry?.arguments?.putParcelable(
+                                    "placeInfo",
+                                    placeInfo
+                                )
+                                navigate(Screen.PlaceDetailScreen.route)
+                            }
+                        },
                         placeInfo = placeInfo
                     )
 
