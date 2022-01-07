@@ -25,35 +25,43 @@ fun LanguagesScreen(viewModel: LanguagesViewModel = hiltViewModel(), navControll
     if (languagesState.error?.isNotBlank()!!) {
         Log.e(Screen.LanguagesScreen.title, languagesState.error)
     } else {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(4.dp)
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            Text(text = "Choose content language: ", style = MaterialTheme.typography.h6)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 itemsIndexed(languagesState.data!!) { index, language ->
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
+                            .height(36.dp)
+                            .padding(start = 16.dp, bottom = 8.dp, top = 8.dp)
                             .clickable {
                                 viewModel.setDataLanguage(language.id)
-                                navController.navigate(Screen.CitiesScreen.route)
+                                if (navController.previousBackStackEntry?.destination?.route == Screen.PlaceDetailScreen.route) {
+                                    navController.navigateUp()
+                                    navController.popBackStack()
+                                } else {
+                                    navController.navigateUp()
+                                }
                             },
                         text = language.name,
                         textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.body1
                     )
 
-                    if (index + 1 != languagesState.data.size) {
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(2.dp)
-                                .padding(vertical = 4.dp),
-                            color = Color.Gray
-                        )
-                    }
+                    Divider(
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .height(2.dp)
+                            .padding(horizontal = 1.dp),
+                        color = Color.Gray
+                    )
                 }
             }
         }

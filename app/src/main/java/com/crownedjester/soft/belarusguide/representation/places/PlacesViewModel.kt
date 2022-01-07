@@ -1,5 +1,6 @@
 package com.crownedjester.soft.belarusguide.representation.places
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -39,8 +40,10 @@ class PlacesViewModel @Inject constructor(
             when (result) {
                 is Resource.Loading ->
                     _placesState.value = PlacesState(isLoading = true)
-                is Resource.Success ->
+                is Resource.Success -> {
                     _placesState.value = PlacesState(data = result.data)
+                    Log.i("PlacesViewModel", result.data.toString())
+                }
                 is Resource.Error ->
                     _placesState.value = PlacesState(error = result.message)
             }

@@ -22,10 +22,9 @@ fun TopBar(navController: NavController) {
                     contentDescription = "nav back icon"
                 )
             }, onClick = {
-                navController.previousBackStackEntry?.id?.let { prevRouteId ->
-                    navController.navigate(
-                        prevRouteId
-                    )
+                navController.enableOnBackPressed(true)
+                if (navController.currentDestination?.route != navController.graph.startDestinationRoute) {
+                    navController.navigateUp()
                 }
             })
         },

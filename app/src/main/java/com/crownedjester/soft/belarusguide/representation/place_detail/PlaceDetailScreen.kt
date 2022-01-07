@@ -1,9 +1,12 @@
 package com.crownedjester.soft.belarusguide.representation.place_detail
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -12,24 +15,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
+import com.crownedjester.soft.belarusguide.representation.util.StringUtil.formatPlaceDescription
 
 @Composable
 fun PlaceDetailScreen(placeInfo: PlaceInfo) {
 
     var isPlaying by remember { mutableStateOf(false) }
-    var playingProgress by remember { mutableStateOf(0f) }
+    var playingProgress by remember { mutableStateOf(1f) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(4.dp)
-    ) {
+            .verticalScroll(rememberScrollState())
+        ) {
         Text(
             text = placeInfo.name,
             Modifier.padding(4.dp),
@@ -41,7 +47,6 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
-                .padding(4.dp)
         )
 
         val painter = rememberImagePainter(placeInfo.photo, builder = {
@@ -50,7 +55,7 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp),
+                .height(300.dp),
             painter = painter,
             contentDescription = "place detail photo"
         )
@@ -98,8 +103,9 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
                     LinearProgressIndicator(
                         progress = playingProgress,
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .height(4.dp)
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .padding(end = 16.dp)
                             .align(Alignment.CenterVertically)
                     )
                 }
@@ -107,7 +113,7 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
 
         }
         Text(
-            text = "\t\t${placeInfo.text}",
+            text = "\t\t${placeInfo.text.formatPlaceDescription()}",
             textAlign = TextAlign.Justify,
             style = MaterialTheme.typography.body2
         )
