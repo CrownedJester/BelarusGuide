@@ -26,6 +26,7 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.rememberMapViewWithLifecycle
+import com.crownedjester.soft.belarusguide.representation.util.DateUtil
 import com.crownedjester.soft.belarusguide.representation.util.GeoUtil
 import com.crownedjester.soft.belarusguide.representation.util.StringUtil.formatPlaceDescription
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -42,6 +43,7 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
     var isPlaying by remember { mutableStateOf(false) }
     var playingProgress by remember { mutableStateOf(0f) }
     val context = LocalContext.current
+    val geocoder = Geocoder(context, Locale.getDefault())
 
     Column(
         modifier = Modifier
@@ -60,6 +62,16 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 12.dp, top = 4.dp),
+            text = "Edited: ${DateUtil.convertTimestampToDate(placeInfo.lastEditTime)}",
+            fontStyle = FontStyle.Italic,
+            style = MaterialTheme.typography.body2,
+            textAlign = TextAlign.End
         )
 
         val painter = rememberImagePainter(placeInfo.photo, builder = {
@@ -154,7 +166,7 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
         val mapView = rememberMapViewWithLifecycle()
         AndroidView(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(start = 6.dp, end = 6.dp, top = 12.dp)
                 .fillMaxWidth()
                 .height(360.dp),
             factory = { mapView }) { composeMapView ->
@@ -171,13 +183,15 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
             }
         }
 
-        val geocoder = Geocoder(context, Locale.getDefault())
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp, end = 8.dp),
             text = GeoUtil.getAddressByLatLng(geocoder, placeInfo.lat, placeInfo.lng),
             textAlign = TextAlign.End,
             fontStyle = FontStyle.Italic,
             style = MaterialTheme.typography.body2
         )
+
     }
 }
