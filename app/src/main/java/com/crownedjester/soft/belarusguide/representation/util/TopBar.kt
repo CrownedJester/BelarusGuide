@@ -3,13 +3,19 @@ package com.crownedjester.soft.belarusguide.representation.util
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.crownedjester.soft.belarusguide.common.Constants
 
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(
+    navController: NavController,
+    onClick: () -> Unit,
+    isDarkMode: Boolean
+) {
 
     TopAppBar(
         title = {
@@ -29,6 +35,15 @@ fun TopBar(navController: NavController) {
             })
         },
         actions = {
+            IconButton(
+                onClick = onClick,
+                content = {
+                    Icon(
+                        imageVector = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                        contentDescription = "theme"
+                    )
+                })
+
             IconButton(
                 content = {
                     Icon(

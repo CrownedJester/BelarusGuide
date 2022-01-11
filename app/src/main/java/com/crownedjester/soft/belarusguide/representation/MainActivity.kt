@@ -3,12 +3,13 @@ package com.crownedjester.soft.belarusguide.representation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,21 +28,30 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val isDarkMode = viewModel.dataStore.isDarkTheme.collectAsState(initial = false)
             BelarusGuideTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
                     val scaffoldState = rememberScaffoldState()
 
                     Scaffold(
                         scaffoldState = scaffoldState,
-                        topBar = { TopBar(navController = navController) }
+                        topBar = {
+                            TopBar(
+                                navController = navController,
+                                onClick = { },
+                                isDarkMode = isDarkMode.value
+                            )
+                        }
                     ) { paddingValues ->
 
                         NavHost(
@@ -67,7 +77,12 @@ class MainActivity : ComponentActivity() {
                                     navController.previousBackStackEntry?.arguments?.getParcelable<PlaceInfo>(
                                         "placeInfo"
                                     )
-                                placeInfo?.let { place -> PlaceDetailScreen(placeInfo = place) }
+                                placeInfo?.let { place ->
+                                    PlaceDetailScreen(
+                                        placeInfo = place,
+                                        navController = navController
+                                    )
+                                }
                             }
                             composable(Screen.LanguagesScreen.route) {
                                 LanguagesScreen(navController = navController)

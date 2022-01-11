@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
@@ -38,10 +39,9 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
-fun PlaceDetailScreen(placeInfo: PlaceInfo) {
+fun PlaceDetailScreen(placeInfo: PlaceInfo, navController: NavController) {
 
     var isPlaying by remember { mutableStateOf(false) }
-    var playingProgress by remember { mutableStateOf(0f) }
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
 
@@ -118,15 +118,13 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
                                 .build()
                         )
                         setDataSource(placeInfo.sound)
-                        prepareAsync()
+                        prepare()
                     }
 
-
-//                    playingProgress = 1f / mediaPlayer.duration
-                    IconToggleButton(
-                        onCheckedChange = {
-                            isPlaying = it
-                            if (it) {
+                    IconButton(
+                        onClick = {
+                            isPlaying = !isPlaying
+                            if (isPlaying) {
                                 mediaPlayer.start()
                             } else {
                                 mediaPlayer.pause()
@@ -135,22 +133,27 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
                         modifier = Modifier
                             .size(48.dp)
                             .align(Alignment.CenterVertically),
-                        checked = isPlaying
                     ) {
                         Icon(
                             imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                            contentDescription = "play button"
+                            contentDescription = "play button",
+                            tint = Color.Black
                         )
                     }
 
                     LinearProgressIndicator(
-                        progress = playingProgress,
+                        progress = (mediaPlayer.currentPosition / mediaPlayer.duration).toFloat(),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(12.dp)
-                            .padding(end = 16.dp)
+                            .height(16.dp)
                             .align(Alignment.CenterVertically)
                     )
+
+                    navController.addOnDestinationChangedListener { controller, destination, _ ->
+                        if (mediaPlayer.isPlaying) {
+                            mediaPlayer.stop()
+                        }
+                    }
+
                 }
             }
 
@@ -194,4 +197,5 @@ fun PlaceDetailScreen(placeInfo: PlaceInfo) {
         )
 
     }
+
 }
