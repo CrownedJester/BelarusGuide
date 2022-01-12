@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -30,12 +30,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
+    private val themeState = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val isDarkMode = viewModel.dataStore.isDarkTheme.collectAsState(initial = false)
-            BelarusGuideTheme {
+
+            BelarusGuideTheme(themeState.value) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -48,8 +49,8 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             TopBar(
                                 navController = navController,
-                                onClick = { },
-                                isDarkMode = isDarkMode.value
+                                onClick = { themeState.value = !themeState.value },
+                                isDarkMode = themeState.value
                             )
                         }
                     ) { paddingValues ->
