@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -76,11 +77,6 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-
-//    //Map
-//    implementation "com.android.volley:volley:1.2.0"
-//    implementation "com.google.android.libraries.maps:maps:3.1.0-beta"
-//    implementation 'com.google.maps.android:maps-v3-ktx:3.3.0'
 
     //Coil
     implementation "io.coil-kt:coil-compose:2.1.0"
