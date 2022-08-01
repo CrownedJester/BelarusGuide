@@ -3,12 +3,15 @@ package com.crownedjester.soft.belarusguide.representation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(private val dataStore: DataStoreRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val dataStore: DataStoreRepository) : ViewModel() {
 
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
