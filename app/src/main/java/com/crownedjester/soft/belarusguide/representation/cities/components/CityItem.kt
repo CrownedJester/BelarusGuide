@@ -17,8 +17,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.crownedjester.soft.belarusguide.data.model.CityDto
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -30,7 +29,7 @@ fun CityItem(
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(96.dp)
             .padding(8.dp),
@@ -44,7 +43,7 @@ fun CityItem(
                 .fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val painter = rememberImagePainter(data = city.logo)
+            val painter = rememberAsyncImagePainter(model = city.logo)
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
