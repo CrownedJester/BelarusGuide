@@ -18,7 +18,11 @@ import androidx.navigation.NavController
 import com.crownedjester.soft.belarusguide.representation.util.Screen
 
 @Composable
-fun LanguagesScreen(viewModel: LanguagesViewModel = hiltViewModel(), navController: NavController) {
+fun LanguagesScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LanguagesViewModel = hiltViewModel(),
+    navController: NavController
+) {
 
     val languagesState = viewModel.languagesState.value
 
@@ -26,7 +30,7 @@ fun LanguagesScreen(viewModel: LanguagesViewModel = hiltViewModel(), navControll
         Log.e(Screen.LanguagesScreen.title, languagesState.error)
     } else {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(4.dp)
         ) {

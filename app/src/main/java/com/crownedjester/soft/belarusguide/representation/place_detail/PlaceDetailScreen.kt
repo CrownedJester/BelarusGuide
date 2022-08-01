@@ -39,14 +39,18 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
-fun PlaceDetailScreen(placeInfo: PlaceInfo, navController: NavController) {
+fun PlaceDetailScreen(
+    modifier: Modifier = Modifier,
+    placeInfo: PlaceInfo,
+    navController: NavController
+) {
 
     var isPlaying by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(4.dp)
             .verticalScroll(rememberScrollState())

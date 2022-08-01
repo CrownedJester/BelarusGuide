@@ -15,7 +15,11 @@ import com.crownedjester.soft.belarusguide.representation.places.components.Plac
 import com.crownedjester.soft.belarusguide.representation.util.Screen
 
 @Composable
-fun PlacesScreen(viewModel: PlacesViewModel = hiltViewModel(), navController: NavController) {
+fun PlacesScreen(
+    modifier: Modifier = Modifier,
+    viewModel: PlacesViewModel = hiltViewModel(),
+    navController: NavController
+) {
 
     val placesState = viewModel.placesState.value
 
@@ -24,7 +28,7 @@ fun PlacesScreen(viewModel: PlacesViewModel = hiltViewModel(), navController: Na
 
     } else {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
         ) {
             LazyColumn(

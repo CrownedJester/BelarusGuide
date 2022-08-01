@@ -25,7 +25,7 @@ fun CitiesScreen(
         Log.e("CitiesScreen", dataState.error)
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(dataState.data!!) { city ->
                 CityItem(
