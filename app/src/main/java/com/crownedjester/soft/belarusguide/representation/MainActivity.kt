@@ -3,7 +3,6 @@ package com.crownedjester.soft.belarusguide.representation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -26,16 +25,17 @@ import com.crownedjester.soft.belarusguide.representation.places.PlacesScreen
 import com.crownedjester.soft.belarusguide.representation.ui.theme.BelarusGuideTheme
 import com.crownedjester.soft.belarusguide.representation.util.Screen
 import com.crownedjester.soft.belarusguide.representation.util.TopBar
+import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel>()
-    private val themeState = mutableStateOf(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        MapKitFactory.initialize(this)
+
         setContent {
 
             val viewModel: MainViewModel = hiltViewModel()
@@ -98,5 +98,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MapKitFactory.getInstance().onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        MapKitFactory.getInstance().onStop()
     }
 }

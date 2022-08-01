@@ -23,16 +23,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.rememberMapViewWithLifecycle
 import com.crownedjester.soft.belarusguide.representation.util.DateUtil
 import com.crownedjester.soft.belarusguide.representation.util.GeoUtil
 import com.crownedjester.soft.belarusguide.representation.util.StringUtil.formatPlaceDescription
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,9 +78,12 @@ fun PlaceDetailScreen(
             textAlign = TextAlign.End
         )
 
-        val painter = rememberImagePainter(placeInfo.photo, builder = {
-            transformations(RoundedCornersTransformation(6f))
-        })
+        val painter = rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current).data(placeInfo.photo)
+                .apply(block = fun ImageRequest.Builder.() {
+                    transformations(RoundedCornersTransformation(6f))
+                }).build()
+        )
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -178,14 +181,19 @@ fun PlaceDetailScreen(
                 .height(360.dp),
             factory = { mapView }) { composeMapView ->
             CoroutineScope(Dispatchers.Main).launch {
-                composeMapView.getMapAsync { map ->
-                    map.uiSettings.isZoomControlsEnabled = true
+                composeMapView.map.apply {
+                    isZoomGesturesEnabled = true
+                    val point = Point(placeInfo.lat, placeInfo.lng)
+                    move(
+                        CameraPosition(
+                            point,
+                            14f,
+                            0f,
+                            0f
+                        )
+                    )
 
-                    val pointPosition = LatLng(placeInfo.lat, placeInfo.lng)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(pointPosition, 15f))
-
-                    val marker = MarkerOptions().position(pointPosition)
-                    map.addMarker(marker)
+                    mapObjects.addPlacemark(point)
                 }
             }
         }
