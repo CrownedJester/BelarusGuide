@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val viewModel: MainViewModel = hiltViewModel()
+            val viewModel: ThemeViewModel = hiltViewModel()
             val isDarkMode by viewModel.isDarkMode.collectAsState()
 
             BelarusGuideTheme(isDarkMode) {
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             TopBar(
                                 navController = navController,
-                                onClick = { viewModel.changeTheme() },
+                                onChangeTheme = { viewModel.changeTheme() },
                                 isDarkMode = isDarkMode
                             )
                         }

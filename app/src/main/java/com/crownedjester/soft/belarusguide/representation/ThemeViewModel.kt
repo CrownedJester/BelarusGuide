@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val dataStore: DataStoreRepository) : ViewModel() {
+class ThemeViewModel @Inject constructor(private val dataStore: DataStoreRepository) : ViewModel() {
 
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
