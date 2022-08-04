@@ -3,6 +3,7 @@ package com.crownedjester.soft.belarusguide.representation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -30,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val sharedViewModel: CitiesPlacesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +78,12 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.IntType
                                     })
                             ) {
-                                PlacesScreen(navController = navController)
+                                it.arguments?.let { it1 ->
+                                    PlacesScreen(
+                                        navController = navController,
+                                        cityId = it1.getInt("cityId", -1)
+                                    )
+                                }
                             }
 
                             composable(Screen.PlaceDetailScreen.route) {

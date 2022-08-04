@@ -13,18 +13,11 @@ class GetPlaces @Inject constructor(
     private val repository: RemoteServicesRepository
 ) {
 
-    operator fun invoke(cityId: Int, lang: Int): Flow<Resource<List<PlaceInfo>>> = flow {
+    operator fun invoke(lang: Int): Flow<Resource<List<PlaceInfo>>> = flow {
         try {
             emit(Resource.Loading())
 
-            val result = mutableListOf<PlaceInfo>()
-            repository.getPlaces().forEach { place ->
-                if (place.lang == lang && place.cityId == cityId) {
-                    result.add(place)
-                }
-            }
-
-            emit(Resource.Success(result))
+            emit(Resource.Success(repository.getPlaces().filter { it.lang == lang }))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         } catch (e: IOException) {
