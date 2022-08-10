@@ -23,15 +23,15 @@ fun CitiesScreen(
 ) {
 
     val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
-    val data = viewModel.citiesStateFlow.collectAsState().value
+    val dataState = viewModel.citiesStateFlow.collectAsState().value
 
-    if (data.error?.isNotBlank()!!) {
-        Log.e("CitiesScreen", data.error)
+    if (dataState.error?.isNotBlank()!!) {
+        Log.e("CitiesScreen", dataState.error)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(data.data!!) { city ->
+            items(dataState.data!!) { city ->
                 CityItem(
                     city = city,
                     onClick = {
