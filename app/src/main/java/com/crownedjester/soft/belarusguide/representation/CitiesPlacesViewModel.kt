@@ -37,37 +37,29 @@ class CitiesPlacesViewModel @Inject constructor(
     }
 
 
-    private suspend fun getCities(lang: Int) {
+    private fun getCities(lang: Int) {
         getCitiesUseCase(lang).onEach { result ->
             when (result) {
-                is Resource.Loading ->
-                    _citiesStateFlow.emit(CitiesState(isLoading = true))
+                is Resource.Loading -> _citiesStateFlow.emit(CitiesState(isLoading = true))
 
-                is Resource.Success -> {
-                    _citiesStateFlow.emit(CitiesState(data = result.data))
-                }
+                is Resource.Success -> _citiesStateFlow.emit(CitiesState(data = result.data))
 
-                is Resource.Error ->
-                    _citiesStateFlow.emit(CitiesState(error = result.message))
+                is Resource.Error -> _citiesStateFlow.emit(CitiesState(error = result.message))
             }
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun getPlaces(lang: Int) {
+    private fun getPlaces(lang: Int) {
         getPlacesUseCase(lang = lang).onEach { result ->
-
             when (result) {
-                is Resource.Loading -> {
-                    _placesStateFlow.emit(PlacesState(isLoading = true))
-                }
+                is Resource.Loading -> _placesStateFlow.emit(PlacesState(isLoading = true))
 
                 is Resource.Success -> {
                     _placesStateFlow.emit(PlacesState(data = result.data))
                     Log.i("PlacesViewModel", result.data.toString())
                 }
 
-                is Resource.Error ->
-                    _placesStateFlow.emit(PlacesState(error = result.message))
+                is Resource.Error -> _placesStateFlow.emit(PlacesState(error = result.message))
             }
         }.launchIn(viewModelScope)
     }
