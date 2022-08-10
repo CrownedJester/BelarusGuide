@@ -1,6 +1,5 @@
 package com.crownedjester.soft.belarusguide.representation.places
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,17 +19,14 @@ import com.crownedjester.soft.belarusguide.representation.util.Screen
 
 @Composable
 fun PlacesScreen(
-    modifier: Modifier = Modifier,
-    cityId: Int,
-    navController: NavController
+    modifier: Modifier = Modifier, navController: NavController, cityId: Int
 ) {
 
     val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
     val placesState = viewModel.placesStateFlow.collectAsState().value
 
     if (placesState.error?.isNotBlank()!!) {
-        Log.e("PlacesScreen", "Data is empty")
-
+        /*todo*/
     } else {
         Box(
             modifier = modifier.fillMaxSize()
@@ -45,12 +41,10 @@ fun PlacesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(320.dp), onClick = {
-                            navController.apply {
-                                currentBackStackEntry?.arguments?.putParcelable(
-                                    "placeInfo", placeInfo
-                                )
-                                navigate(Screen.PlaceDetailScreen.route)
-                            }
+                            navController.navigate(
+                                Screen.PlaceDetailScreen.route +
+                                        "?placeId=${placeInfo.id}&sound=${placeInfo.sound}"
+                            )
                         }, placeInfo = placeInfo
                     )
 

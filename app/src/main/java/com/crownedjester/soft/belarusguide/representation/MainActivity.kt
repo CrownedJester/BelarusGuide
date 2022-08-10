@@ -18,12 +18,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
 import com.crownedjester.soft.belarusguide.representation.cities.CitiesScreen
 import com.crownedjester.soft.belarusguide.representation.languages.LanguagesScreen
 import com.crownedjester.soft.belarusguide.representation.place_detail.PlaceDetailScreen
 import com.crownedjester.soft.belarusguide.representation.places.PlacesScreen
 import com.crownedjester.soft.belarusguide.representation.ui.theme.BelarusGuideTheme
+import com.crownedjester.soft.belarusguide.representation.util.BundleUtil.CITY_ID_KEY
+import com.crownedjester.soft.belarusguide.representation.util.BundleUtil.PLACE_ID_KEY
+import com.crownedjester.soft.belarusguide.representation.util.BundleUtil.SOUND_KEY
 import com.crownedjester.soft.belarusguide.representation.util.Screen
 import com.crownedjester.soft.belarusguide.representation.util.TopBar
 import com.yandex.mapkit.MapKitFactory
@@ -73,15 +75,17 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                Screen.PlacesScreen.route + "/{cityId}", arguments = listOf(
-                                    navArgument("cityId") {
+                                Screen.PlacesScreen.route + "/{$CITY_ID_KEY}",
+                                arguments = listOf(
+                                    navArgument(CITY_ID_KEY) {
                                         type = NavType.IntType
-                                    })
+                                    },
+                                )
                             ) {
-                                it.arguments?.let { it1 ->
+                                it.arguments?.getInt(CITY_ID_KEY)?.let { cityId ->
                                     PlacesScreen(
                                         navController = navController,
-                                        cityId = it1.getInt("cityId", -1)
+                                        cityId = cityId
                                     )
                                 }
                             }
