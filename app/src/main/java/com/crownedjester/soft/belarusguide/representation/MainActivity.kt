@@ -90,18 +90,22 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
 
-                            composable(Screen.PlaceDetailScreen.route) {
-                                val placeInfo =
-                                    navController.previousBackStackEntry?.arguments?.getParcelable<PlaceInfo>(
-                                        "placeInfo"
-                                    )
-                                placeInfo?.let { place ->
+                            composable(Screen.PlaceDetailScreen.route + "?placeId={$PLACE_ID_KEY}&sound={$SOUND_KEY}",
+                                arguments = listOf(
+                                    navArgument(PLACE_ID_KEY) {
+                                        type = NavType.IntType
+                                    },
+                                    navArgument(SOUND_KEY) {
+                                        type = NavType.StringType
+                                    }
+                                )) {
+                                it.arguments?.getInt(PLACE_ID_KEY)?.let { placeId ->
                                     PlaceDetailScreen(
-                                        placeInfo = place,
-                                        navController = navController
+                                        placeId = placeId
                                     )
                                 }
                             }
+
                             composable(Screen.LanguagesScreen.route) {
                                 LanguagesScreen(navController = navController)
                             }
