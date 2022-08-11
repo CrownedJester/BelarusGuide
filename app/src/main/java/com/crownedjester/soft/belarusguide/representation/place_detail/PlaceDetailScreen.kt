@@ -26,19 +26,22 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
+import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
+import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.PlaceMap
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.PlayerProgress
 import com.crownedjester.soft.belarusguide.representation.util.DateUtil
 import com.crownedjester.soft.belarusguide.representation.util.StringUtil.formatPlaceDescription
+import kotlinx.coroutines.FlowPreview
 import java.util.*
 
+@OptIn(FlowPreview::class)
 @Composable
 fun PlaceDetailScreen(
     modifier: Modifier = Modifier,
     playerViewModel: PlayerViewModel = hiltViewModel(),
     placeId: Int
 ) {
-
 
     val context = LocalContext.current
 
@@ -49,8 +52,7 @@ fun PlaceDetailScreen(
     val sharedViewModel =
         viewModel<CitiesPlacesViewModel>(LocalContext.current as ComponentActivity)
 
-    val (_, _, name, text, sound, _, lat, lng, _, photo, _, _, lastEditTime) = sharedViewModel.placesStateFlow
-        .collectAsState().value.data!!.first { it.id == placeId }
+    val placesState = sharedViewModel.placesStateFlow.collectAsState().value
 
     val progressValue by animateFloatAsState(
         targetValue = (playerViewModel.getDurationSeconds() - remainingSeconds.toFloat()) / playerViewModel.getDurationSeconds()
@@ -63,64 +65,74 @@ fun PlaceDetailScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(4.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = name,
-            Modifier.padding(4.dp),
-            style = MaterialTheme.typography.h5,
-            textAlign = TextAlign.Center
-        )
+    if (placesState.error?.isNotBlank() == true) {
+        ErrorScreen(
+            message = placesState.error,
+            onRetry = { sharedViewModel.retryRetrieveSharedData() })
+    } else if (placesState.isLoading) {
+        LoadingCircleProgress()
+    } else {
 
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-        )
+        val (_, _, name, text, sound, _, lat, lng, _, photo, _, _, lastEditTime) = placesState.data!!.first { it.id == placeId }
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 12.dp, top = 4.dp),
-            text = "Edited: ${DateUtil.convertTimestampToDate(lastEditTime)}",
-            fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.body2,
-            textAlign = TextAlign.End
-        )
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(4.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = name,
+                Modifier.padding(4.dp),
+                style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center
+            )
 
-        val painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current).data(photo).apply {
-                transformations(RoundedCornersTransformation(6f))
-            }.build()
-        )
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            painter = painter,
-            contentDescription = "place detail photo"
-        )
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+            )
 
-        PlayerProgress(
-            sound = sound,
-            progress = progressValue,
-            playerText = playerViewModel.toStringFormat(),
-            onStart = { playerViewModel.onEvent(PlayerEvent.OnStart) }
-        ) { playerViewModel.onEvent(PlayerEvent.OnPause) }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 12.dp, top = 4.dp),
+                text = "Edited: ${DateUtil.convertTimestampToDate(lastEditTime)}",
+                fontStyle = FontStyle.Italic,
+                style = MaterialTheme.typography.body2,
+                textAlign = TextAlign.End
+            )
+
+            val painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(photo).apply {
+                    transformations(RoundedCornersTransformation(6f))
+                }.build()
+            )
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                painter = painter,
+                contentDescription = "place detail photo"
+            )
+
+            PlayerProgress(
+                sound = sound,
+                progress = progressValue,
+                playerText = playerViewModel.toStringFormat(),
+                onStart = { playerViewModel.onEvent(PlayerEvent.OnStart) }
+            ) { playerViewModel.onEvent(PlayerEvent.OnPause) }
 
 
-        Text(
-            text = "\t\t${text.formatPlaceDescription()}",
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.body2
-        )
+            Text(
+                text = "\t\t${text.formatPlaceDescription()}",
+                textAlign = TextAlign.Justify,
+                style = MaterialTheme.typography.body2
+            )
 
-        PlaceMap(lat = lat, lng = lng, geocoder = geocoder)
+            PlaceMap(lat = lat, lng = lng, geocoder = geocoder)
 
+        }
     }
-
 }

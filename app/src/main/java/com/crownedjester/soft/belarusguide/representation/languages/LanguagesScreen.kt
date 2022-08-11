@@ -1,6 +1,6 @@
 package com.crownedjester.soft.belarusguide.representation.languages
 
-import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,12 +11,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.crownedjester.soft.belarusguide.representation.util.Screen
+import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
+import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
+import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
+import kotlinx.coroutines.FlowPreview
 
+@OptIn(FlowPreview::class)
 @Composable
 fun LanguagesScreen(
     modifier: Modifier = Modifier,
@@ -24,10 +30,14 @@ fun LanguagesScreen(
     navController: NavController
 ) {
 
+    val sharedViewModel: CitiesPlacesViewModel =
+        viewModel(LocalContext.current as ComponentActivity)
     val languagesState = viewModel.languagesState.value
 
     if (languagesState.error?.isNotBlank()!!) {
-        Log.e(Screen.LanguagesScreen.title, languagesState.error)
+        ErrorScreen(message = languagesState.error, onRetry = { viewModel.retryCall() })
+    } else if (languagesState.isLoading) {
+        LoadingCircleProgress()
     } else {
         Column(
             modifier = modifier
@@ -47,12 +57,8 @@ fun LanguagesScreen(
                             .padding(start = 16.dp, bottom = 8.dp, top = 8.dp)
                             .clickable {
                                 viewModel.setDataLanguage(language.id)
-                                if (navController.previousBackStackEntry?.destination?.route == Screen.PlaceDetailScreen.route) {
-                                    navController.navigateUp()
-                                    navController.popBackStack()
-                                } else {
-                                    navController.navigateUp()
-                                }
+                                sharedViewModel.retryRetrieveSharedData()
+                                navController.navigateUp()
                             },
                         text = language.name,
                         textAlign = TextAlign.Start,
