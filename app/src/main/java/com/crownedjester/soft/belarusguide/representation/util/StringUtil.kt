@@ -2,7 +2,7 @@ package com.crownedjester.soft.belarusguide.representation.util
 
 object StringUtil {
     private val BAD_STRINGS_ARRAY =
-        listOf(
+        arrayOf(
             "</p>",
             "&laquo;",
             "&mdash;",
