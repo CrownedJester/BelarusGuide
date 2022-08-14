@@ -40,7 +40,8 @@ import java.util.*
 fun PlaceDetailScreen(
     modifier: Modifier = Modifier,
     playerViewModel: PlayerViewModel = hiltViewModel(),
-    placeId: Int
+    placeId: Int,
+    currentLangId: Int
 ) {
 
     val context = LocalContext.current
@@ -73,7 +74,7 @@ fun PlaceDetailScreen(
         LoadingCircleProgress()
     } else {
 
-        val (_, _, name, text, sound, _, lat, lng, _, photo, _, _, lastEditTime) = placesState.data!!.first { it.id == placeId }
+        val (_, _, name, text, sound, _, lat, lng, _, photo, _, _, lastEditTime) = placesState.data!!.first { it.id == placeId && it.lang == currentLangId }
 
         Column(
             modifier = modifier

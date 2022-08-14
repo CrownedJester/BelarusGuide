@@ -30,12 +30,15 @@ import com.crownedjester.soft.belarusguide.representation.util.Screen
 import com.crownedjester.soft.belarusguide.representation.util.TopBar
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @OptIn(FlowPreview::class)
     private val sharedViewModel: CitiesPlacesViewModel by viewModels()
 
+    @OptIn(FlowPreview::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,8 +46,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val viewModel: ThemeViewModel = hiltViewModel()
+            val viewModel: DatastoreHandlerViewModel = hiltViewModel()
             val isDarkMode by viewModel.isDarkMode.collectAsState()
+            val currentLangId by viewModel.currentLanguageStateFlow.collectAsState()
 
             BelarusGuideTheme(isDarkMode) {
                 // A surface container using the 'background' color from the theme
@@ -71,7 +75,10 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         ) {
                             composable(Screen.CitiesScreen.route) {
-                                CitiesScreen(navController = navController)
+                                CitiesScreen(
+                                    navController = navController,
+                                    currentLangId = currentLangId
+                                )
                             }
 
                             composable(
@@ -85,7 +92,8 @@ class MainActivity : ComponentActivity() {
                                 it.arguments?.getInt(CITY_ID_KEY)?.let { cityId ->
                                     PlacesScreen(
                                         navController = navController,
-                                        cityId = cityId
+                                        cityId = cityId,
+                                        currentLangId = currentLangId
                                     )
                                 }
                             }
@@ -101,7 +109,8 @@ class MainActivity : ComponentActivity() {
                                 )) {
                                 it.arguments?.getInt(PLACE_ID_KEY)?.let { placeId ->
                                     PlaceDetailScreen(
-                                        placeId = placeId
+                                        placeId = placeId,
+                                        currentLangId = currentLangId
                                     )
                                 }
                             }

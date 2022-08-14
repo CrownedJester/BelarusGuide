@@ -22,7 +22,8 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun CitiesScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    currentLangId: Int
 ) {
 
     val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
@@ -35,7 +36,7 @@ fun CitiesScreen(
     } else {
         Column(modifier = modifier.fillMaxSize()) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(citiesState.data!!) { city ->
+                items(citiesState.data?.filter { it.lang == currentLangId }!!) { city ->
                     CityItem(
                         city = city,
                         onClick = {

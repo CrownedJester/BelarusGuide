@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.crownedjester.soft.belarusguide.common.Resource
 import com.crownedjester.soft.belarusguide.data.model.CityDto
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
-import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreRepository
 import com.crownedjester.soft.belarusguide.domain.use_case.get_cities.GetCities
 import com.crownedjester.soft.belarusguide.domain.use_case.get_places.GetPlaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +21,6 @@ private const val TAG = "SharedViewModel"
 @FlowPreview
 @HiltViewModel
 class CitiesPlacesViewModel @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository,
     private val getPlacesUseCase: GetPlaces,
     private val getCitiesUseCase: GetCities
 ) : ViewModel() {
@@ -35,10 +36,8 @@ class CitiesPlacesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            dataStoreRepository.currentLangId.collectLatest { langId ->
-                getCities(langId)
-                getPlaces(langId)
-            }
+            getCities()
+            getPlaces()
         }
     }
 
@@ -47,9 +46,9 @@ class CitiesPlacesViewModel @Inject constructor(
         retryPlacesTrigger.retry()
     }
 
-    private fun getCities(lang: Int) {
+    private fun getCities() {
         retryableFlow(retryCitiesTrigger) {
-            getCitiesUseCase(lang).onEach { result ->
+            getCitiesUseCase().onEach { result ->
                 when (result) {
                     is Resource.Loading -> _citiesStateFlow.emit(UiDataState(isLoading = true))
 
@@ -61,9 +60,9 @@ class CitiesPlacesViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getPlaces(lang: Int) {
+    private fun getPlaces() {
         retryableFlow(retryPlacesTrigger) {
-            getPlacesUseCase(lang = lang).onEach { result ->
+            getPlacesUseCase().onEach { result ->
                 when (result) {
                     is Resource.Loading -> _placesStateFlow.emit(UiDataState(isLoading = true))
 

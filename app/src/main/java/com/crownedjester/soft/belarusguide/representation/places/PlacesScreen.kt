@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 @OptIn(FlowPreview::class)
 @Composable
 fun PlacesScreen(
-    modifier: Modifier = Modifier, navController: NavController, cityId: Int
+    modifier: Modifier = Modifier, navController: NavController, cityId: Int, currentLangId: Int
 ) {
 
     val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
@@ -47,7 +47,7 @@ fun PlacesScreen(
                     .fillMaxSize()
                     .padding(4.dp)
             ) {
-                itemsIndexed(placesState.data!!.filter { it.cityId == cityId }) { i, placeInfo ->
+                itemsIndexed(placesState.data!!.filter { it.cityId == cityId && it.lang == currentLangId }) { i, placeInfo ->
                     PlaceItem(
                         modifier = Modifier
                             .fillMaxWidth()

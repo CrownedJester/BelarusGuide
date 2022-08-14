@@ -11,14 +11,13 @@ import javax.inject.Inject
 
 class GetCities @Inject constructor(private val repository: RemoteServicesRepository) {
 
-    operator fun invoke(lang: Int): Flow<Resource<List<CityDto>>> = flow {
+    operator fun invoke(): Flow<Resource<List<CityDto>>> = flow {
         try {
             emit(Resource.Loading())
 
             emit(
                 Resource.Success(
                     repository.getCities()
-                        .filter { it.lang == lang }
                         .sortedBy { it.id }
                 )
             )
