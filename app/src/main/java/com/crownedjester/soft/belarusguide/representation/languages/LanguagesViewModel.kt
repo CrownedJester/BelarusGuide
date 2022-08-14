@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crownedjester.soft.belarusguide.common.Resource
+import com.crownedjester.soft.belarusguide.data.model.LanguageDto
 import com.crownedjester.soft.belarusguide.domain.datastore.DataStoreRepository
 import com.crownedjester.soft.belarusguide.domain.use_case.get_languages.GetLanguages
 import com.crownedjester.soft.belarusguide.representation.RetryTrigger
+import com.crownedjester.soft.belarusguide.representation.UiDataState
 import com.crownedjester.soft.belarusguide.representation.retryableFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +26,8 @@ class LanguagesViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
-    private val _languagesState = mutableStateOf(LanguagesState())
-    val languagesState: State<LanguagesState> = _languagesState
+    private val _languagesState = mutableStateOf(UiDataState<LanguageDto>())
+    val languagesState: State<UiDataState<LanguageDto>> = _languagesState
 
     private val retryTrigger = RetryTrigger()
 
@@ -41,14 +43,11 @@ class LanguagesViewModel @Inject constructor(
         retryableFlow(retryTrigger) {
             getLanguagesUseCase().onEach { result ->
                 when (result) {
-                    is Resource.Loading ->
-                        _languagesState.value = LanguagesState(isLoading = true)
+                    is Resource.Loading -> _languagesState.value = UiDataState(isLoading = true)
 
-                    is Resource.Success ->
-                        _languagesState.value = LanguagesState(data = result.data)
+                    is Resource.Success -> _languagesState.value = UiDataState(data = result.data)
 
-                    is Resource.Error ->
-                        _languagesState.value = LanguagesState(error = result.message)
+                    is Resource.Error -> _languagesState.value = UiDataState(error = result.message)
 
                 }
             }

@@ -57,7 +57,6 @@ fun LanguagesScreen(
                             .padding(start = 16.dp, bottom = 8.dp, top = 8.dp)
                             .clickable {
                                 viewModel.setDataLanguage(language.id)
-                                sharedViewModel.retryRetrieveSharedData()
                                 navController.navigateUp()
                             },
                         text = language.name,
