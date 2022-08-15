@@ -14,10 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
 import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
 import com.crownedjester.soft.belarusguide.representation.util.Screen
@@ -27,16 +25,14 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun LanguagesScreen(
     modifier: Modifier = Modifier,
-    viewModel: LanguagesViewModel = hiltViewModel(),
     navController: NavController
 ) {
 
-    val sharedViewModel: CitiesPlacesViewModel =
-        viewModel(LocalContext.current as ComponentActivity)
+    val viewModel: LanguagesViewModel = viewModel(LocalContext.current as ComponentActivity)
     val languagesState = viewModel.languagesState.value
 
     if (languagesState.error?.isNotBlank()!!) {
-        ErrorScreen(message = languagesState.error, onRetry = { viewModel.retryCall() })
+        ErrorScreen(message = languagesState.error, onRetry = { viewModel.retryRetrieveLanguages() })
     } else if (languagesState.isLoading) {
         LoadingCircleProgress()
     } else {

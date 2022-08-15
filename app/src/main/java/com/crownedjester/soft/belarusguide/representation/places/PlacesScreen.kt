@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
 import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
 import com.crownedjester.soft.belarusguide.representation.places.components.PlaceItem
@@ -22,18 +21,17 @@ import com.crownedjester.soft.belarusguide.representation.util.Screen
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 
-@OptIn(FlowPreview::class)
 @Composable
 fun PlacesScreen(
     modifier: Modifier = Modifier, navController: NavController, cityId: Int, currentLangId: Int
 ) {
 
-    val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val viewModel: PlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
     val placesState = viewModel.placesStateFlow.collectAsState().value
 
     if (placesState.error?.isNotBlank() == true) {
         ErrorScreen(
-            message = placesState.error, onRetry = { viewModel.retryRetrieveSharedData() }
+            message = placesState.error, onRetry = { viewModel.retryRetrievePlaces() }
         )
     } else if (placesState.isLoading) {
         LoadingCircleProgress()

@@ -20,8 +20,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.crownedjester.soft.belarusguide.representation.cities.CitiesScreen
 import com.crownedjester.soft.belarusguide.representation.languages.LanguagesScreen
+import com.crownedjester.soft.belarusguide.representation.languages.LanguagesViewModel
 import com.crownedjester.soft.belarusguide.representation.place_detail.PlaceDetailScreen
 import com.crownedjester.soft.belarusguide.representation.places.PlacesScreen
+import com.crownedjester.soft.belarusguide.representation.places.PlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.ui.theme.BelarusGuideTheme
 import com.crownedjester.soft.belarusguide.representation.util.BundleUtil.CITY_ID_KEY
 import com.crownedjester.soft.belarusguide.representation.util.BundleUtil.PLACE_ID_KEY
@@ -32,13 +34,14 @@ import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 
+@OptIn(FlowPreview::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(FlowPreview::class)
-    private val sharedViewModel: CitiesPlacesViewModel by viewModels()
+    private val citiesViewModel: CitiesViewModel by viewModels()
+    private val placesViewModel: PlacesViewModel by viewModels()
+    private val languagesViewModel: LanguagesViewModel by viewModels()
 
-    @OptIn(FlowPreview::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

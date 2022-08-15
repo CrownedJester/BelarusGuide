@@ -1,13 +1,15 @@
-package com.crownedjester.soft.belarusguide.representation
+package com.crownedjester.soft.belarusguide.representation.places
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crownedjester.soft.belarusguide.common.Resource
-import com.crownedjester.soft.belarusguide.data.model.CityDto
 import com.crownedjester.soft.belarusguide.data.model.PlaceInfo
-import com.crownedjester.soft.belarusguide.domain.use_case.get_cities.GetCities
 import com.crownedjester.soft.belarusguide.domain.use_case.get_places.GetPlaces
+import com.crownedjester.soft.belarusguide.representation.RetryTrigger
+import com.crownedjester.soft.belarusguide.representation.UiDataState
+import com.crownedjester.soft.belarusguide.representation.retryableFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,48 +18,26 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "SharedViewModel"
-
-@FlowPreview
+@OptIn(FlowPreview::class)
 @HiltViewModel
-class CitiesPlacesViewModel @Inject constructor(
-    private val getPlacesUseCase: GetPlaces,
-    private val getCitiesUseCase: GetCities
+class PlacesViewModel @Inject constructor(
+    private val getPlacesUseCase: GetPlaces
 ) : ViewModel() {
-
-    private val _citiesStateFlow = MutableStateFlow(UiDataState<CityDto>())
-    val citiesStateFlow: StateFlow<UiDataState<CityDto>> = _citiesStateFlow
 
     private val _placesStateFlow = MutableStateFlow(UiDataState<PlaceInfo>())
     val placesStateFlow: StateFlow<UiDataState<PlaceInfo>> = _placesStateFlow
 
-    private val retryCitiesTrigger = RetryTrigger()
     private val retryPlacesTrigger = RetryTrigger()
 
     init {
-        viewModelScope.launch {
-            getCities()
+        viewModelScope.launch(Dispatchers.IO) {
             getPlaces()
         }
     }
 
-    fun retryRetrieveSharedData() {
-        retryCitiesTrigger.retry()
+
+    fun retryRetrievePlaces() {
         retryPlacesTrigger.retry()
-    }
-
-    private fun getCities() {
-        retryableFlow(retryCitiesTrigger) {
-            getCitiesUseCase().onEach { result ->
-                when (result) {
-                    is Resource.Loading -> _citiesStateFlow.emit(UiDataState(isLoading = true))
-
-                    is Resource.Success -> _citiesStateFlow.emit(UiDataState(data = result.data))
-
-                    is Resource.Error -> _citiesStateFlow.emit(UiDataState(error = result.message))
-                }
-            }
-        }.launchIn(viewModelScope)
     }
 
     private fun getPlaces() {

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
+import com.crownedjester.soft.belarusguide.representation.CitiesViewModel
 import com.crownedjester.soft.belarusguide.representation.cities.components.CityItem
 import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
 import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
@@ -26,11 +26,11 @@ fun CitiesScreen(
     currentLangId: Int
 ) {
 
-    val viewModel: CitiesPlacesViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val viewModel: CitiesViewModel = viewModel(LocalContext.current as ComponentActivity)
     val citiesState = viewModel.citiesStateFlow.collectAsState().value
 
     if (citiesState.error?.isNotBlank() == true) {
-        ErrorScreen(message = citiesState.error, onRetry = { viewModel.retryRetrieveSharedData() })
+        ErrorScreen(message = citiesState.error, onRetry = { viewModel.retryRetrieveCities() })
     } else if (citiesState.isLoading) {
         LoadingCircleProgress()
     } else {

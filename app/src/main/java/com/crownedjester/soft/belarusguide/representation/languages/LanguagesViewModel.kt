@@ -35,7 +35,7 @@ class LanguagesViewModel @Inject constructor(
         getLanguages()
     }
 
-    fun retryCall() {
+    fun retryRetrieveLanguages() {
         getLanguages()
     }
 

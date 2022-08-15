@@ -25,17 +25,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
 import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.PlaceMap
 import com.crownedjester.soft.belarusguide.representation.place_detail.components.PlayerProgress
+import com.crownedjester.soft.belarusguide.representation.places.PlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.util.DateUtil
 import com.crownedjester.soft.belarusguide.representation.util.StringUtil.formatPlaceDescription
-import kotlinx.coroutines.FlowPreview
 import java.util.*
 
-@OptIn(FlowPreview::class)
 @Composable
 fun PlaceDetailScreen(
     modifier: Modifier = Modifier,
@@ -51,7 +49,7 @@ fun PlaceDetailScreen(
     val remainingSeconds by playerViewModel.remainingSeconds.collectAsState()
 
     val sharedViewModel =
-        viewModel<CitiesPlacesViewModel>(LocalContext.current as ComponentActivity)
+        viewModel<PlacesViewModel>(LocalContext.current as ComponentActivity)
 
     val placesState = sharedViewModel.placesStateFlow.collectAsState().value
 
@@ -69,7 +67,7 @@ fun PlaceDetailScreen(
     if (placesState.error?.isNotBlank() == true) {
         ErrorScreen(
             message = placesState.error,
-            onRetry = { sharedViewModel.retryRetrieveSharedData() })
+            onRetry = { sharedViewModel.retryRetrievePlaces() })
     } else if (placesState.isLoading) {
         LoadingCircleProgress()
     } else {
