@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.crownedjester.soft.belarusguide.representation.CitiesPlacesViewModel
 import com.crownedjester.soft.belarusguide.representation.common_components.ErrorScreen
 import com.crownedjester.soft.belarusguide.representation.common_components.LoadingCircleProgress
+import com.crownedjester.soft.belarusguide.representation.util.Screen
 import kotlinx.coroutines.FlowPreview
 
 @OptIn(FlowPreview::class)
@@ -49,7 +50,7 @@ fun LanguagesScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                itemsIndexed(languagesState.data!!) { index, language ->
+                itemsIndexed(languagesState.data!!) { _, language ->
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -57,7 +58,16 @@ fun LanguagesScreen(
                             .padding(start = 16.dp, bottom = 8.dp, top = 8.dp)
                             .clickable {
                                 viewModel.setDataLanguage(language.id)
-                                navController.navigateUp()
+                                if (navController.previousBackStackEntry?.destination?.route?.contains(
+                                        Screen.PlaceDetailScreen.route
+                                    ) == true
+                                ) {
+                                    navController.popBackStack()
+                                    navController.navigateUp()
+                                } else {
+                                    navController.navigateUp()
+                                }
+
                             },
                         text = language.name,
                         textAlign = TextAlign.Start,

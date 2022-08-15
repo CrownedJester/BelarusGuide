@@ -13,7 +13,7 @@ import com.crownedjester.soft.belarusguide.common.Constants
 @Composable
 fun TopBar(
     navController: NavController,
-    onClick: () -> Unit,
+    onChangeTheme: () -> Unit,
     isDarkMode: Boolean
 ) {
 
@@ -36,7 +36,7 @@ fun TopBar(
         },
         actions = {
             IconButton(
-                onClick = onClick,
+                onClick = onChangeTheme,
                 content = {
                     Icon(
                         imageVector = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
